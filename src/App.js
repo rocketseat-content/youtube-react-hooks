@@ -1,28 +1,24 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+export default function App() {
+  const [location, setLocation] = useState({});
+
+  useEffect(() => {
+    const watchId = navigator.geolocation.watchPosition(handlePositionReceived);
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
+
+  function handlePositionReceived({ coords }) {
+    const { latitude, longitude } = coords;
+
+    setLocation({ latitude, longitude });
   }
-}
 
-export default App;
+  return (
+    <>
+      Latitude: {location.latitude} <br />
+      Longitude: {location.longitude}
+    </>
+  );
+}
